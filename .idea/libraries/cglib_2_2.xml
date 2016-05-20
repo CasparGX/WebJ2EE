@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="cglib-2.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../hibernate-release-5.1.0.Final/cglib-2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

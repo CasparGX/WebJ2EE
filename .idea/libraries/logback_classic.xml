@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="logback-classic">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../hibernate-release-5.1.0.Final/logback-classic.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
