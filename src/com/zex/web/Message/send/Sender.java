@@ -24,7 +24,7 @@ public class Sender {
         connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMQConnection.DEFAULT_USER,
                 ActiveMQConnection.DEFAULT_PASSWORD,
-                "tcp://localhost:61616");
+                "tcp://192.168.191.2:61616");
         try {
             // 构造从工厂得到连接对象
             connection = connectionFactory.createConnection();
@@ -34,11 +34,13 @@ public class Sender {
             session = connection.createSession(Boolean.TRUE,
                     Session.AUTO_ACKNOWLEDGE);
             // 获取session注意参数值xingbo.xu-queue是一个服务器的queue，须在在ActiveMq的console配置
-            destination = session.createQueue("FirstQueue");
+            //destination = session.createQueue("FirstQueue");
+            destination = session.createTopic("topic");
+
             // 得到消息生成者【发送者】
             producer = session.createProducer(destination);
             // 设置不持久化，此处学习，实际根据项目决定
-            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
             // 构造消息，此处写死，项目就是参数，或者方法获取
             sendMessage(session, producer, msg);
             session.commit();
@@ -55,10 +57,12 @@ public class Sender {
 
     public static void sendMessage(Session session, MessageProducer producer, String msg)
             throws Exception {
-            TextMessage message = session
-                    .createTextMessage(msg);
-            // 发送消息到目的地方
-            producer.send(message);
-
+        //for (int i=0;i<2;i++) {
+        TextMessage message = session
+                .createTextMessage(msg);
+        message.setStringProperty("ID","a");
+        // 发送消息到目的地方
+        producer.send(message);
+        //}
     }
 }
