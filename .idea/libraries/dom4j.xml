@@ -8,7 +8,6 @@
       <root url="jar://$PROJECT_DIR$/../hibernate-release-5.1.0.Final/hibernate-entitymanager-3.4.0.GA/lib/hibernate-core.jar!/" />
       <root url="jar://$PROJECT_DIR$/../hibernate-release-5.1.0.Final/hibernate-entitymanager-3.4.0.GA/lib/javassist.jar!/" />
       <root url="jar://$PROJECT_DIR$/../hibernate-release-5.1.0.Final/hibernate-entitymanager-3.4.0.GA/lib/jta.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../hibernate-release-5.1.0.Final/hibernate-entitymanager-3.4.0.GA/lib/slf4j-api.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

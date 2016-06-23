@@ -10,6 +10,11 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.zex.web.*" %>
+<%@ page import="com.zex.web.Message.send.Sender" %>
+<%@ page import="sun.org.mozilla.javascript.json.JsonParser" %>
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.google.gson.JsonArray" %>
+<%@ page import="com.google.gson.JsonObject" %>
 
 <%
 
@@ -59,7 +64,19 @@
             }
             break;
         case 3:
+            num = Integer.parseInt(request.getParameter("goodsNum"));
+            int gidOut = Integer.parseInt(request.getParameter("goodsId"));
+            int warehourseOut = Integer.parseInt(request.getParameter("warehourse"));
+            actionUserId = Integer.parseInt(request.getParameter("actionUserId"));
 
+            JsonObject data = new JsonObject();
+            data.addProperty("gid",gidOut+"");
+            data.addProperty("warehourse", warehourseOut+"");
+            data.addProperty("actionUserId", actionUserId+"");
+            data.addProperty("num", num+"");
+            Gson gson = new Gson();
+            String dataString = gson.toJson(data);
+            Sender sender = new Sender(dataString);
             break;
     }
 %>
@@ -93,7 +110,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <p>
-                    <b>企业级Web应用开发-作业一</b>
+                    <b>企业级Web应用开发</b>
                 </p>
 
                 <p>组长：周恩旭（2013960837）</p>
@@ -121,6 +138,8 @@
                     <button id="btnInsertGoods" type="button" class="btn btn-info withripple left-block">添加商品
                     </button>
                     <button id="btnUpdateGoods" type="button" class="btn btn-info withripple left-block">更新商品
+                    </button>
+                    <button id="btnOutGoods" type="button" class="btn btn-info withripple left-block">商品拨库
                     </button>
                     <table class="table table-striped ">
                         <tr>
@@ -233,6 +252,7 @@
         </div>
     </div>
 
+    <%--更新商品的弹窗--%>
     <div id="updateGoods" class="col-md-4 col-md-offset-4 " style="position: absolute;top: 25%;">
         <div class="bs-component panel panel-default">
 
@@ -271,6 +291,49 @@
             </div>
         </div>
     </div>
+
+    <%--拨库商品的弹窗--%>
+    <div id="outGoods" class="col-md-4 col-md-offset-4 " style="position: absolute;top: 25%;">
+        <div class="bs-component panel panel-default">
+
+            <div class="panel-heading">
+                <p>
+                    <b>调拨商品</b>
+                </p>
+            </div>
+            <div class="panel-body form-group-info">
+                <form method="post" action="index.jsp">
+                    <input type="hidden" name="action" value="3"/>
+                    操作用户：
+                    <select name="actionUserId">
+                        <%
+                            for (UserModel item:userInfo){
+                                out.print("<option value=\"" + item.getId() + "\">" + item.getId() + ":" + item.getName()  + "</option>");
+                            }
+                        %>
+                    </select>
+                    <br/>
+                    商品名称：
+                    <select name="goodsId" class="selectize-control">
+                        <%
+                            for (GoodsModel item : goodsInfo) {
+                                out.print("<option value=\"" + item.getId() + "\">" + item.getId() + ":" + item.getName() + " 库存：" + item.getStock() + "</option>");
+                            }
+                        %>
+                    </select>
+                    <br/>
+                    选择调拨到的仓库：
+                    <select name="warehourse">
+                        <option value="2">仓库二</option>
+                        <option value="3">仓库三</option>
+                    </select>
+                    <br/>
+                    操作数量：<input class="form-control" name="goodsNum" type="number"/>
+                    <input class="btn btn-info withripple left-block" type="submit" value="确定"/>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $("#btnGoods").click(function () {
@@ -292,12 +355,20 @@
     $("#btnInsertGoods").click(function () {
         $("#popwindow").removeClass("hidden");
         $("#insertGoods").removeClass("hidden");
+        $("#outGoods").addClass("hidden");
         $("#updateGoods").addClass("hidden");
     });
     $("#btnUpdateGoods").click(function () {
         $("#popwindow").removeClass("hidden");
         $("#insertGoods").addClass("hidden");
+        $("#outGoods").addClass("hidden");
         $("#updateGoods").removeClass("hidden");
+    });
+    $("#btnOutGoods").click(function () {
+        $("#popwindow").removeClass("hidden");
+        $("#outGoods").removeClass("hidden");
+        $("#insertGoods").addClass("hidden");
+        $("#updateGoods").addClass("hidden");
     });
     $("#dark").click(function () {
         $("#popwindow").addClass("hidden");

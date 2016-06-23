@@ -8,10 +8,7 @@ import javax.jms.*;
 public class Sender {
     private static final int SEND_NUMBER = 5;
 
-    public static void main(String[] args) {
-        System.out.println("姓名：周恩旭 学号：2013960837\n");
-        System.out.println("姓名：周恩旭 学号：2013960837\n");
-        System.out.println("姓名：周恩旭 学号：2013960837\n");
+    public Sender(String msg) {
         // ConnectionFactory ：连接工厂，JMS 用它创建连接
         ConnectionFactory connectionFactory;
         // Connection ：JMS 客户端到JMS Provider 的连接
@@ -43,7 +40,7 @@ public class Sender {
             // 设置不持久化，此处学习，实际根据项目决定
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
             // 构造消息，此处写死，项目就是参数，或者方法获取
-            sendMessage(session, producer);
+            sendMessage(session, producer, msg);
             session.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,14 +53,12 @@ public class Sender {
         }
     }
 
-    public static void sendMessage(Session session, MessageProducer producer)
+    public static void sendMessage(Session session, MessageProducer producer, String msg)
             throws Exception {
-        for (int i = 1; i <= SEND_NUMBER; i++) {
             TextMessage message = session
-                    .createTextMessage("ActiveMq 发送的消息 周恩旭" + i);
+                    .createTextMessage(msg);
             // 发送消息到目的地方
-            System.out.println("发送消息：" + "ActiveMq 发送的消息 周恩旭" + i);
             producer.send(message);
-        }
+
     }
 }
