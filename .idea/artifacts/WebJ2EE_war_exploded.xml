@@ -22,6 +22,9 @@
           <element id="library" level="project" name="hibernate-core-3.6.0.Final" />
           <element id="library" level="project" name="slf4j-api-1.5.6" />
           <element id="library" level="project" name="slf4j-log4j12-1.5.6" />
+          <element id="library" level="project" name="activemq-client-5.11.2" />
+          <element id="library" level="project" name="geronimo-j2ee-management_1.1_spec-1.0.1" />
+          <element id="library" level="project" name="antlr-2.7.6" />
         </element>
       </element>
     </root>

@@ -1,5 +1,8 @@
 package com.zex.web;
 
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
+
 import java.sql.ResultSet;
 
 /**
@@ -22,5 +25,21 @@ public class Action {
         common.insert(sql);
         //common.close();
         return common.getResult();
+    }
+
+    public int insertActionByHbm(int gid, int uid, int num, int action){
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
+
+        ActionModel actionModel = new ActionModel();
+        actionModel.setAction(action);
+        actionModel.setGid(gid);
+        actionModel.setUid(uid);
+        actionModel.setNum(num);
+        session.save(actionModel);
+
+        tx.commit();
+
+        return actionModel.getId();
     }
 }

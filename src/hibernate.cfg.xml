@@ -12,5 +12,6 @@
         <property name="hibernate.connection.characterEncoding">utf8</property>
         <property name="hibernate.connection.useUnicode">true</property>
         <mapping resource="com/zex/web/Goods.hbm.xml"/>
+        <mapping resource="com/zex/web/Action.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

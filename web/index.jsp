@@ -52,9 +52,9 @@
             int gid = Integer.parseInt(request.getParameter("goodsId"));
             actionUserId = Integer.parseInt(request.getParameter("actionUserId"));
             Goods goods1 = new Goods();
-            int result1 = goods1.updateGoods(gid, actionUserId, num, action);
+            int result1 = goods1.updateGoodsByHbm(gid, actionUserId, num, action);
             if (result1 != -1) {
-                System.out.println("insert goods success");
+                System.out.println("update goods success");
                 response.sendRedirect("/index.jsp");
             }
             break;
