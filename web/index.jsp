@@ -76,7 +76,7 @@
             data.addProperty("num", num+"");
             Gson gson = new Gson();
             String dataString = gson.toJson(data);
-            Sender sender = new Sender(dataString);
+            Sender sender = new Sender(dataString,warehourseOut);
             break;
     }
 %>

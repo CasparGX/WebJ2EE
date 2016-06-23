@@ -35,7 +35,7 @@ public class Receiver {
             //destination = session.createQueue("FirstQueue");
             destination = session.createTopic("topic");
             //consumer = session.createConsumer(destination);
-            consumer = session.createDurableSubscriber(destination,"abc","ID='a'",false);
+            consumer = session.createDurableSubscriber(destination,"abc","ID='1'",false);
             /*while (true) {
                 //设置接收者接收消息的时间，为了便于测试，这里谁定为100s
                 TextMessage message = (TextMessage) consumer.receive(60*60*1000);

@@ -8,7 +8,7 @@ import javax.jms.*;
 public class Sender {
     private static final int SEND_NUMBER = 5;
 
-    public Sender(String msg) {
+    public Sender(String msg, int warehourseOut) {
         // ConnectionFactory ：连接工厂，JMS 用它创建连接
         ConnectionFactory connectionFactory;
         // Connection ：JMS 客户端到JMS Provider 的连接
@@ -42,7 +42,7 @@ public class Sender {
             // 设置不持久化，此处学习，实际根据项目决定
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
             // 构造消息，此处写死，项目就是参数，或者方法获取
-            sendMessage(session, producer, msg);
+            sendMessage(session, producer, msg, warehourseOut);
             session.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,12 +55,12 @@ public class Sender {
         }
     }
 
-    public static void sendMessage(Session session, MessageProducer producer, String msg)
+    public static void sendMessage(Session session, MessageProducer producer, String msg, int warehourseOut)
             throws Exception {
         //for (int i=0;i<2;i++) {
         TextMessage message = session
                 .createTextMessage(msg);
-        message.setStringProperty("ID","a");
+        message.setStringProperty("ID", warehourseOut+"");
         // 发送消息到目的地方
         producer.send(message);
         //}
