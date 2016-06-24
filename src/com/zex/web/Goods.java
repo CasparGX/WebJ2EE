@@ -14,6 +14,7 @@ import com.zex.web.HibernateUtil;
  */
 public class Goods {
     private String tableName = "goods";
+    private boolean success = false;
 
     public ResultSet getGoods() {
         String sql = "SELECT * FROM " + tableName;

@@ -1,5 +1,8 @@
 package com.zex.web.Message.receiver;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.zex.web.Goods;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -21,7 +24,7 @@ public class Receiver {
         connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMQConnection.DEFAULT_USER,
                 ActiveMQConnection.DEFAULT_PASSWORD,
-                "tcp://192.168.191.2:61616");
+                "tcp://localhost:61616");
         try {
             // 构造从工厂得到连接对象
             connection = connectionFactory.createConnection();
@@ -51,6 +54,22 @@ public class Receiver {
                 public void onMessage(Message message) {
                     try {
                         System.out.println("收到消息" + ((TextMessage) message).getText());
+                        Gson gson = new Gson();
+                        JsonObject data = gson.fromJson(msg,null);
+                        String code = data.get("code").getAsString();
+                        if (code.equals("1")){
+                            String goodsName = data.get("goodsName").getAsString();
+                            int warehourse = data.get("warehourse").getAsInt();
+                            int actionUserId = data.get("actionUserId").getAsInt();
+                            int num = data.get("num").getAsInt();
+
+                            Goods goods = new Goods();
+                            int result = goods.updateOutGoodsByHbm(goodsName,actionUserId,num,1,warehourse);
+                        } else if(code.equals("0")){
+
+                        } else if (code.equals("-1")){
+
+                        }
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }

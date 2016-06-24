@@ -24,7 +24,7 @@ public class Sender {
         connectionFactory = new ActiveMQConnectionFactory(
                 ActiveMQConnection.DEFAULT_USER,
                 ActiveMQConnection.DEFAULT_PASSWORD,
-                "tcp://192.168.191.2:61616");
+                "tcp://localhost:61616");
         try {
             // 构造从工厂得到连接对象
             connection = connectionFactory.createConnection();
