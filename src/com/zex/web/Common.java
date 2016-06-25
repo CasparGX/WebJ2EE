@@ -6,6 +6,18 @@ import java.sql.*;
  * Created by caspar on 16-5-18.
  */
 public class Common {
+
+
+    public static boolean isSuccess() {
+        return success;
+    }
+
+    public static void setSuccess(boolean success) {
+        Common.success = success;
+    }
+
+    private static boolean success;
+
     public static String driverName = "com.MySQL,jdbc.Driver";
     public static String username = "root";
     public static String password = "123456";

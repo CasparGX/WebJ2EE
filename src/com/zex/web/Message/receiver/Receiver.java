@@ -3,6 +3,7 @@ package com.zex.web.Message.receiver;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.zex.web.Common;
 import com.zex.web.Goods;
 import com.zex.web.Message.send.Sender;
 import org.apache.activemq.ActiveMQConnection;
@@ -72,7 +73,7 @@ public class Receiver {
                             int source = data.get("source").getAsInt();
 
                             Goods goods = new Goods();
-                            int result = goods.updateOutGoodsByHbm(goodsName, actionUserId, num, 1, warehourse);
+                            int result = goods.updateOutGoodsByHbm(goodsName, actionUserId, num, 1, source);
                             //发送确认修改的反馈消息
                             if (result == -1) {
                                 JsonObject callbackData = new JsonObject();
@@ -90,9 +91,9 @@ public class Receiver {
                                 Sender sender = new Sender(dataString, source);
                             }
                         } else if (code.equals("0")) {
-                            Goods.success = true;
+                            Common.setSuccess(true);
                         } else if (code.equals("-1")) {
-                            Goods.success = false;
+                            Common.setSuccess(false);
                         }
                     } catch (JMSException e) {
                         e.printStackTrace();

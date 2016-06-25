@@ -10,6 +10,7 @@ import net.sf.ehcache.search.expression.Criteria;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import com.zex.web.HibernateUtil;
+import org.omg.CORBA.COMM_FAILURE;
 
 /**
  * Created by caspar on 16-5-18.
@@ -17,7 +18,6 @@ import com.zex.web.HibernateUtil;
 public class Goods {
     private String tableName = "goods";
 
-    public static boolean success = false;
     public static int currentID = 1;
 
     public ResultSet getGoods() {
@@ -77,7 +77,7 @@ public class Goods {
         if (action == 0) {
             num = -num;
         }
-        Session session = HibernateUtil.getSessionFactory().openSession();
+        final Session session = HibernateUtil.getSessionFactory().openSession();
         final Transaction tx = session.beginTransaction();
 
         List<GoodsModel> list = session.createQuery("select distinct g from GoodsModel g where g.id=:gid")
@@ -92,20 +92,30 @@ public class Goods {
         session.saveOrUpdate(goodsModel);
 
         if (goodsModel.getId() != -1) {
-            Timer timer=new Timer();
-            TimerTask task=new TimerTask(){
-                public void run(){
-                    if (!success){
-                        tx.rollback();
-                    } else {
-
-                        tx.commit();
+            if (remote){
+                Timer timer=new Timer();
+                TimerTask task=new TimerTask(){
+                    public void run(){
+                        if (Common.isSuccess()){
+                            tx.commit();
+                            session.close();
+                            System.out.println("计时任务:" + Common.isSuccess());
+                        } else {
+                            tx.rollback();
+                            session.clear();
+                            tx.commit();
+                            session.close();
+                            System.out.println("计时任务:" + Common.isSuccess());
+                        }
                     }
-                    System.out.println("计时任务");
-                }
-            };
+                };
 
-            timer.schedule(task,5000);
+                //Goods.success = true;
+                timer.schedule(task,10000);
+            } else {
+                tx.commit();
+                session.close();
+            }
 
             Action action1 = new Action();
             int result = action1.insertActionByHbm(gid, uid, num, action, 0);
@@ -150,6 +160,7 @@ public class Goods {
             tx.commit();
         }
 
+        session.close();
         if (goodsModel.getId() != -1) {
             Action action1 = new Action();
             int result = action1.insertActionByHbm(goodsModel.getId(), uid, num, action, source);
@@ -163,6 +174,7 @@ public class Goods {
         } else {
             return -1;
         }
+
     }
 
     public void insertGoodsByHbm(int uid, String name, int stock) {
@@ -175,6 +187,8 @@ public class Goods {
         session.save(goodsModel);
 
         tx.commit();
+
+        session.close();
         if (goodsModel.getId() != -1) {
 
             Action actionModel = new Action();

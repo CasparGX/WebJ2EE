@@ -6,15 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
-<%@ page import="com.mysql.jdbc.Driver" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.google.gson.JsonObject" %>
 <%@ page import="com.zex.web.*" %>
 <%@ page import="com.zex.web.Message.send.Sender" %>
-<%@ page import="sun.org.mozilla.javascript.json.JsonParser" %>
-<%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.google.gson.JsonArray" %>
-<%@ page import="com.google.gson.JsonObject" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.util.ArrayList" %>
 
 <%
 
@@ -69,6 +66,7 @@
             int warehourseOut = Integer.parseInt(request.getParameter("warehourse"));
             actionUserId = Integer.parseInt(request.getParameter("actionUserId"));
 
+            //Goods.success = false;
             Goods goods2 = new Goods();
             int result2 = goods2.updateGoodsByHbm(gidOut, actionUserId, num, 0, true);
             if (result2 != -1) {
@@ -202,7 +200,11 @@
 
                             }
                             out.print("<td>" + actionResult.getString("action.num") + "</td>");
-                            out.print("<td>" + actionResult.getString("action.source") + "</td>");
+                            String source = actionResult.getString("action.source")+"";
+                            if (source.equals("null")){
+                                source = "";
+                            }
+                            out.print("<td>" + source + "</td>");
                             out.print("<td>" + actionResult.getString("action.time") + "</td><tr/>");
                         }
                     %>
