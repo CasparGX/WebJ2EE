@@ -26,6 +26,23 @@ public class Goods {
         return common.getResult();
     }
 
+    public String queryGoodsName(int id) {
+        try {
+        String sql = "SELECT * FROM " + tableName + " WHERE `id`=" + id;
+        Common common = new Common();
+        common.query(sql);
+        //common.close();
+        ResultSet result = common.getResult();
+
+            while(result.next()){
+                return result.getString("name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public int insertGoods(int uid, String name, int stock) {
         String sql = "INSERT INTO " + tableName + "(name,stock)" + " VALUES(\"" + name + "\"," + stock + ")";
         Common common = new Common();
@@ -75,7 +92,7 @@ public class Goods {
         if (goodsModel.getId() != -1) {
             Action action1 = new Action();
             int result = action1.insertActionByHbm(gid, uid, num, action, 0);
-            if (result==-1){
+            if (result == -1) {
                 System.out.println("updateGoodsByHbm：更新商品后插入action记录失败");
                 tx.rollback();
                 return -1;
@@ -103,7 +120,7 @@ public class Goods {
             stock = goods.getStock();
         }
         session.clear();
-        if (goodsModel==null){
+        if (goodsModel == null) {
             goodsModel = new GoodsModel();
             goodsModel.setName(goodsName);
             goodsModel.setStock(stock + num);
@@ -112,14 +129,14 @@ public class Goods {
         } else {
             goodsModel.setName(goodsName);
             goodsModel.setStock(stock + num);
-            session.saveOrUpdate(goodsModel);
+            session.update(goodsModel);
             tx.commit();
         }
 
         if (goodsModel.getId() != -1) {
             Action action1 = new Action();
             int result = action1.insertActionByHbm(goodsModel.getId(), uid, num, action, source);
-            if (result==-1){
+            if (result == -1) {
                 System.out.println("updateGoodsByHbm：更新商品后插入action记录失败");
                 tx.rollback();
                 return -1;

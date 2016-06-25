@@ -2,6 +2,7 @@ package com.zex.web.Message.receiver;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.zex.web.Goods;
 import com.zex.web.Message.send.Sender;
 import org.apache.activemq.ActiveMQConnection;
@@ -58,8 +59,10 @@ public class Receiver {
                     try {
                         String msg = ((TextMessage) message).getText();
                         System.out.println("收到消息" + msg);
+
                         Gson gson = new Gson();
-                        JsonObject data = gson.fromJson(msg, null);
+                        //JsonObject data = gson.fromJson(msg, null);
+                        JsonObject data = (new JsonParser()).parse(msg).getAsJsonObject();
                         String code = data.get("code").getAsString();
                         if (code.equals("1")) {
                             String goodsName = data.get("goodsName").getAsString();
@@ -76,14 +79,14 @@ public class Receiver {
                                 callbackData.addProperty("warehourse", Goods.currentID);
                                 callbackData.addProperty("code", -1);
 
-                                String dataString = gson.toJson(data);
+                                String dataString = gson.toJson(callbackData);
                                 Sender sender = new Sender(dataString, source);
                             } else {
                                 JsonObject callbackData = new JsonObject();
                                 callbackData.addProperty("warehourse", Goods.currentID);
                                 callbackData.addProperty("code", 0);
 
-                                String dataString = gson.toJson(data);
+                                String dataString = gson.toJson(callbackData);
                                 Sender sender = new Sender(dataString, source);
                             }
                         } else if (code.equals("0")) {

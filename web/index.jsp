@@ -73,9 +73,10 @@
             int result2 = goods2.updateGoodsByHbm(gidOut, actionUserId, num, 0, true);
             if (result2 != -1) {
                 System.out.println("update goods success");
-
+                String goodsName = goods2.queryGoodsName(gidOut);
                 JsonObject data = new JsonObject();
-                data.addProperty("gid",gidOut+"");
+                data.addProperty("code","1");
+                data.addProperty("goodsName",goodsName);
                 data.addProperty("warehourse", warehourseOut+"");
                 data.addProperty("actionUserId", actionUserId+"");
                 data.addProperty("num", num+"");
@@ -182,6 +183,7 @@
                         <th>用户名称</th>
                         <th>操作</th>
                         <th>数量</th>
+                        <th>来源</th>
                         <th>时间</th>
                     </tr>
                     <%
@@ -200,6 +202,7 @@
 
                             }
                             out.print("<td>" + actionResult.getString("action.num") + "</td>");
+                            out.print("<td>" + actionResult.getString("action.source") + "</td>");
                             out.print("<td>" + actionResult.getString("action.time") + "</td><tr/>");
                         }
                     %>
@@ -334,7 +337,7 @@
                     <br/>
                     选择调拨到的仓库：
                     <select name="warehourse">
-                        <option value="2">仓库二</option>
+                        <option value="1">仓库二</option>
                         <option value="3">仓库三</option>
                     </select>
                     <br/>

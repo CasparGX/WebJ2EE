@@ -43,7 +43,7 @@ public class Action {
         session.save(actionModel);
 
         tx.commit();
-
+        session.close();
         return actionModel.getId();
     }
 }
