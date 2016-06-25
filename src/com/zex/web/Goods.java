@@ -14,7 +14,9 @@ import com.zex.web.HibernateUtil;
  */
 public class Goods {
     private String tableName = "goods";
-    private boolean success = false;
+
+    public static boolean success = false;
+    public static int currentID = 1;
 
     public ResultSet getGoods() {
         String sql = "SELECT * FROM " + tableName;
@@ -72,7 +74,7 @@ public class Goods {
         tx.commit();
         if (goodsModel.getId() != -1) {
             Action action1 = new Action();
-            int result = action1.insertActionByHbm(gid, uid, num, action);
+            int result = action1.insertActionByHbm(gid, uid, num, action, 0);
             if (result==-1){
                 System.out.println("updateGoodsByHbm：更新商品后插入action记录失败");
                 tx.rollback();
@@ -83,9 +85,50 @@ public class Goods {
         } else {
             return -1;
         }
+    }
 
+    public int updateOutGoodsByHbm(String goodsName, int uid, int num, int action, int source) {
+        int stock = 0;
+        GoodsModel goodsModel = null;
+        if (action == 0) {
+            num = -num;
+        }
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = session.beginTransaction();
 
+        List<GoodsModel> list = session.createQuery("select distinct g from GoodsModel g where g.name=:goodsName")
+                .setString("goodsName", goodsName).list();
+        for (GoodsModel goods : list) {
+            goodsModel = goods;
+            stock = goods.getStock();
+        }
+        session.clear();
+        if (goodsModel==null){
+            goodsModel = new GoodsModel();
+            goodsModel.setName(goodsName);
+            goodsModel.setStock(stock + num);
+            session.save(goodsModel);
+            tx.commit();
+        } else {
+            goodsModel.setName(goodsName);
+            goodsModel.setStock(stock + num);
+            session.saveOrUpdate(goodsModel);
+            tx.commit();
+        }
 
+        if (goodsModel.getId() != -1) {
+            Action action1 = new Action();
+            int result = action1.insertActionByHbm(goodsModel.getId(), uid, num, action, source);
+            if (result==-1){
+                System.out.println("updateGoodsByHbm：更新商品后插入action记录失败");
+                tx.rollback();
+                return -1;
+            } else {
+                return goodsModel.getId();
+            }
+        } else {
+            return -1;
+        }
     }
 
     public void insertGoodsByHbm(int uid, String name, int stock) {

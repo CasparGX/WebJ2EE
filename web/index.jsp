@@ -69,14 +69,24 @@
             int warehourseOut = Integer.parseInt(request.getParameter("warehourse"));
             actionUserId = Integer.parseInt(request.getParameter("actionUserId"));
 
-            JsonObject data = new JsonObject();
-            data.addProperty("gid",gidOut+"");
-            data.addProperty("warehourse", warehourseOut+"");
-            data.addProperty("actionUserId", actionUserId+"");
-            data.addProperty("num", num+"");
-            Gson gson = new Gson();
-            String dataString = gson.toJson(data);
-            Sender sender = new Sender(dataString,warehourseOut);
+            Goods goods2 = new Goods();
+            int result2 = goods2.updateGoodsByHbm(gidOut, actionUserId, num, 0);
+            if (result2 != -1) {
+                System.out.println("update goods success");
+
+                JsonObject data = new JsonObject();
+                data.addProperty("gid",gidOut+"");
+                data.addProperty("warehourse", warehourseOut+"");
+                data.addProperty("actionUserId", actionUserId+"");
+                data.addProperty("num", num+"");
+                data.addProperty("source", Goods.currentID);
+                Gson gson = new Gson();
+                String dataString = gson.toJson(data);
+                Sender sender = new Sender(dataString,warehourseOut);
+
+                response.sendRedirect("/index.jsp");
+            }
+
             break;
     }
 %>

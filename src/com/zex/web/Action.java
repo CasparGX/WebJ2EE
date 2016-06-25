@@ -1,5 +1,6 @@
 package com.zex.web;
 
+import com.sun.istack.internal.Nullable;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 
@@ -27,7 +28,7 @@ public class Action {
         return common.getResult();
     }
 
-    public int insertActionByHbm(int gid, int uid, int num, int action){
+    public int insertActionByHbm(int gid, int uid, int num, int action, int source){
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
 
@@ -36,6 +37,9 @@ public class Action {
         actionModel.setGid(gid);
         actionModel.setUid(uid);
         actionModel.setNum(num);
+        if (source!=0){
+            actionModel.setSource("仓库"+source);
+        }
         session.save(actionModel);
 
         tx.commit();
