@@ -52,7 +52,7 @@ public class Goods {
         return result;
     }
 
-    public int updateGoodsByHbm(int gid, int uid, int num, int action) {
+    public int updateGoodsByHbm(int gid, int uid, int num, int action, boolean remote) {
         int stock = 0;
         GoodsModel goodsModel = null;
         if (action == 0) {
