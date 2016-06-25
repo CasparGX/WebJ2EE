@@ -337,8 +337,18 @@
                     <br/>
                     选择调拨到的仓库：
                     <select name="warehourse">
-                        <option value="1">仓库二</option>
-                        <option value="3">仓库三</option>
+                        <%
+                            ArrayList<String> warehourseList = new ArrayList<String>();
+                            warehourseList.add("仓库一");
+                            warehourseList.add("仓库二");
+                            warehourseList.add("仓库三");
+                            for (int i=0; i<warehourseList.size();i++){
+                                if ((i+1)==Goods.currentID){
+                                    continue;
+                                }
+                                out.println("<option value=\""+(i+1)+"\">"+warehourseList.get(i)+"</option>");
+                            }
+                        %>
                     </select>
                     <br/>
                     操作数量：<input class="form-control" name="goodsNum" type="number"/>

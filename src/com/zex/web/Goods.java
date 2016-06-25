@@ -3,6 +3,8 @@ package com.zex.web;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import net.sf.ehcache.search.expression.Criteria;
 import org.hibernate.Transaction;
@@ -76,7 +78,7 @@ public class Goods {
             num = -num;
         }
         Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction tx = session.beginTransaction();
+        final Transaction tx = session.beginTransaction();
 
         List<GoodsModel> list = session.createQuery("select distinct g from GoodsModel g where g.id=:gid")
                 .setInteger("gid", gid).list();
@@ -88,8 +90,23 @@ public class Goods {
         goodsModel.setId(gid);
         goodsModel.setStock(stock + num);
         session.saveOrUpdate(goodsModel);
-        tx.commit();
+
         if (goodsModel.getId() != -1) {
+            Timer timer=new Timer();
+            TimerTask task=new TimerTask(){
+                public void run(){
+                    if (!success){
+                        tx.rollback();
+                    } else {
+
+                        tx.commit();
+                    }
+                    System.out.println("计时任务");
+                }
+            };
+
+            timer.schedule(task,5000);
+
             Action action1 = new Action();
             int result = action1.insertActionByHbm(gid, uid, num, action, 0);
             if (result == -1) {
