@@ -1,11 +1,15 @@
 package com.zex.web;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.zex.web.Message.Global;
+import com.zex.web.Message.receiver.Receiver;
 import net.sf.ehcache.search.expression.Criteria;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
@@ -71,7 +75,7 @@ public class Goods {
         return result;
     }
 
-    public int updateGoodsByHbm(int gid, int uid, int num, int action, boolean remote) {
+    public int updateGoodsByHbm(int gid, int uid, int num, int action, boolean remote) throws IOException {
         int stock = 0;
         GoodsModel goodsModel = null;
         if (action == 0) {
@@ -91,34 +95,45 @@ public class Goods {
         goodsModel.setStock(stock + num);
         session.saveOrUpdate(goodsModel);
 
+        //tx.commit();
         if (goodsModel.getId() != -1) {
             if (remote){
+                String path = "/home/app/ideaProject/WebJ2EE/webj2ee_success.txt";
+                final File file = new File(path);
+                System.out.println(file.getAbsolutePath());
+                file.createNewFile();
+
                 Timer timer=new Timer();
                 TimerTask task=new TimerTask(){
                     public void run(){
-                        if (Common.isSuccess()){
+                        if (!file.exists()){
                             tx.commit();
                             session.close();
-                            System.out.println("计时任务:" + Common.isSuccess());
+                            System.out.println("计时任务:" + file.exists());
                         } else {
                             tx.rollback();
                             session.clear();
                             tx.commit();
                             session.close();
-                            System.out.println("计时任务:" + Common.isSuccess());
+                            System.out.println("计时任务:" + file.exists());
                         }
                     }
                 };
 
                 //Goods.success = true;
-                timer.schedule(task,10000);
+                timer.schedule(task,5000);
             } else {
                 tx.commit();
                 session.close();
             }
 
             Action action1 = new Action();
-            int result = action1.insertActionByHbm(gid, uid, num, action, 0);
+            int result = 0;
+            try {
+                result = action1.insertActionByHbm(gid, uid, num, action, 0);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (result == -1) {
                 System.out.println("updateGoodsByHbm：更新商品后插入action记录失败");
                 tx.rollback();
@@ -163,7 +178,12 @@ public class Goods {
         session.close();
         if (goodsModel.getId() != -1) {
             Action action1 = new Action();
-            int result = action1.insertActionByHbm(goodsModel.getId(), uid, num, action, source);
+            int result = 0;
+            try {
+                result = action1.insertActionByHbm(goodsModel.getId(), uid, num, action, source);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             if (result == -1) {
                 System.out.println("updateGoodsByHbm：更新商品后插入action记录失败");
                 tx.rollback();

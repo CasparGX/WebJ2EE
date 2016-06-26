@@ -7,7 +7,7 @@ import java.sql.*;
  */
 public class Common {
 
-
+/*
     public static boolean isSuccess() {
         return success;
     }
@@ -16,7 +16,7 @@ public class Common {
         Common.success = success;
     }
 
-    private static boolean success;
+    private static boolean success;*/
 
     public static String driverName = "com.MySQL,jdbc.Driver";
     public static String username = "root";

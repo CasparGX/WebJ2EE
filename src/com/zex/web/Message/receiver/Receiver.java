@@ -5,13 +5,25 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.zex.web.Common;
 import com.zex.web.Goods;
+import com.zex.web.Message.Global;
 import com.zex.web.Message.send.Sender;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Receiver {
+    public static boolean isSuccess() {
+        return success;
+    }
+
+    public static void setSuccess(boolean success) {
+        Receiver.success = success;
+    }
+
+    private static boolean success;
     public static void main(String[] args) {
         // ConnectionFactory ：连接工厂，JMS 用它创建连接
         ConnectionFactory connectionFactory;
@@ -91,11 +103,24 @@ public class Receiver {
                                 Sender sender = new Sender(dataString, source);
                             }
                         } else if (code.equals("0")) {
-                            Common.setSuccess(true);
+                            Receiver.setSuccess(true);
+
+                            String path = "/home/app/ideaProject/WebJ2EE/webj2ee_success.txt";
+                            File file = new File(path);
+                            System.out.println(file.getAbsolutePath());
+                            if (file.exists()){
+                                file.delete();
+                            }
                         } else if (code.equals("-1")) {
-                            Common.setSuccess(false);
+                            Receiver.setSuccess(false);
+                            String path = "/home/app/ideaProject/WebJ2EE/webj2ee_success.txt";
+                            final File file = new File(path);
+                            System.out.println(file.getAbsolutePath());
+                            file.createNewFile();
                         }
                     } catch (JMSException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }

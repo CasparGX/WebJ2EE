@@ -12,6 +12,8 @@
 <%@ page import="com.zex.web.Message.send.Sender" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.zex.web.Message.Global" %>
+<%@ page import="com.zex.web.Message.receiver.Receiver" %>
 
 <%
 
@@ -67,6 +69,8 @@
             actionUserId = Integer.parseInt(request.getParameter("actionUserId"));
 
             //Goods.success = false;
+            //Global.setSuccess(true);
+
             Goods goods2 = new Goods();
             int result2 = goods2.updateGoodsByHbm(gidOut, actionUserId, num, 0, true);
             if (result2 != -1) {
@@ -346,7 +350,7 @@
                             warehourseList.add("仓库三");
                             for (int i=0; i<warehourseList.size();i++){
                                 if ((i+1)==Goods.currentID){
-                                    continue;
+                                    //continue;
                                 }
                                 out.println("<option value=\""+(i+1)+"\">"+warehourseList.get(i)+"</option>");
                             }

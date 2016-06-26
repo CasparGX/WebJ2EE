@@ -5,6 +5,7 @@ import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by caspar on 16-5-18.
@@ -28,9 +29,10 @@ public class Action {
         return common.getResult();
     }
 
-    public int insertActionByHbm(int gid, int uid, int num, int action, int source){
+    public int insertActionByHbm(int gid, int uid, int num, int action, int source) throws SQLException {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
+        session.clear();
 
         ActionModel actionModel = new ActionModel();
         actionModel.setAction(action);
@@ -40,7 +42,14 @@ public class Action {
         if (source!=0){
             actionModel.setSource("仓库"+source);
         }
-        session.save(actionModel);
+        /*ResultSet resultSet = getAction();
+        int id = 0;
+        while(resultSet.next()){
+            id = resultSet.getInt("id");
+            break;
+        }
+        actionModel.setId(id+1);*/
+        session.saveOrUpdate(actionModel);
 
         tx.commit();
         session.close();
