@@ -5,6 +5,8 @@ package com.zex.web;
  */
 public class GoodsModel {
     private int id;
+    private String name;
+    private int stock;
 
     public int getId() {
         return id;
@@ -31,6 +33,4 @@ public class GoodsModel {
         this.id = id;
     }
 
-    private String name;
-    private int stock;
 }
